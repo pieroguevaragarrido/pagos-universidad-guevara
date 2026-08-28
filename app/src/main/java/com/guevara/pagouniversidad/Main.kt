@@ -41,6 +41,18 @@ fun main() {
         j++
     }
 
+    // ---------- VALIDACION: mas de 18 creditos requiere autorizacion ----------
+    if (totalCreditos > 18) {
+        println()
+        println("Estudiante: $nombreEstudiante")
+        println("Total de creditos: $totalCreditos")
+        println()
+        println("ATENCION: La matricula supera los 18 creditos.")
+        println("Se requiere autorizacion para continuar con el proceso de pago.")
+        println("El programa se detendra.")
+        return
+    }
+
     var cargaAcademica = ""
     if (totalCreditos <= 12) {
         cargaAcademica = "M.R"
