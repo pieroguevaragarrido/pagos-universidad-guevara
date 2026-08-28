@@ -58,11 +58,27 @@ fun main() {
     }
     val valorCuota = totalPagar / numeroCuotas
 
+    // ---------- RESULTADO FINAL ----------
     println()
-    println("--- Calculos realizados ---")
+    println("Estudiante: $nombreEstudiante")
+    println()
+    println(String.format("%-30s %-10s %s", "Cursos:", "Creditos", "Costo"))
+
+    var k = 0
+    while (k < nombresCursos.size) {
+        println(
+            String.format(
+                "%-30s %-10d S/%.0f",
+                nombresCursos[k], creditosCursos[k], costosCursos[k]
+            )
+        )
+        k++
+    }
+
+    println()
+    println("Cursos matriculados: ${nombresCursos.size}")
     println("Total de creditos: $totalCreditos")
-    println("Total a pagar: S/$totalPagar")
-    println("Carga academica: $cargaAcademica")
-    println("Numero de cuotas: $numeroCuotas")
-    println("Valor de cada cuota: S/$valorCuota")
+    println(String.format("Total a pagar: S/%.0f", totalPagar))
+    println("Cargo academico: $cargaAcademica")
+    println(String.format("Forma de pago: %d cuotas de S/%.0f", numeroCuotas, valorCuota))
 }
