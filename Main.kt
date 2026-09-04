@@ -1,7 +1,6 @@
 package com.guevara.pagouniversidad
 
 fun main() {
-    // ---------- CATEGORIA ----------
     println("Elige tu categoria (ordinario, becado):")
     val categoria = readLine()!!.lowercase()
 
@@ -57,11 +56,11 @@ fun main() {
     }
 
     println()
-    println("Elige tu turno (manana, tarde, noche):")
+    println("Elige tu turno (mañana, tarde, noche):")
     val turno = readLine()!!.lowercase()
 
     var porcentajeTurno = 0.0
-    if (turno == "manana") {
+    if (turno == "mañana") {
         porcentajeTurno = 0.10
     } else if (turno == "tarde") {
         porcentajeTurno = 0.15
@@ -71,6 +70,10 @@ fun main() {
 
     val recargoTurno = totalPagar * porcentajeTurno
     totalPagar += recargoTurno
+
+    // ---------- IGV ----------
+    val igv = totalPagar * 0.18
+    val totalConIgv = totalPagar + igv
 
     var cargaAcademica = ""
     if (totalCreditos <= 12) {
@@ -82,12 +85,12 @@ fun main() {
     }
 
     var numeroCuotas = 0
-    if (totalPagar > 2500) {
+    if (totalConIgv > 2500) {
         numeroCuotas = 3
     } else {
         numeroCuotas = 2
     }
-    val valorCuota = totalPagar / numeroCuotas
+    val valorCuota = totalConIgv / numeroCuotas
 
     println()
     println("Categoria: Ordinario")
@@ -108,7 +111,9 @@ fun main() {
     println("Cursos matriculados: ${nombresCursos.size}")
     println("Total de creditos: $totalCreditos")
     println("Turno: $turno (recargo ${(porcentajeTurno * 100).toInt()}%)")
-    println(String.format("Total a pagar (con turno): S/%.0f", totalPagar))
+    println(String.format("Subtotal (con turno): S/%.0f", totalPagar))
+    println(String.format("IGV (18%%): S/%.0f", igv))
+    println(String.format("Total a pagar (con IGV): S/%.0f", totalConIgv))
     println("Cargo academico: $cargaAcademica")
     println(String.format("Forma de pago: %d cuotas de S/%.0f", numeroCuotas, valorCuota))
 }
