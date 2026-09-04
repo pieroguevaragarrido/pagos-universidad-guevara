@@ -10,31 +10,30 @@ fun main() {
     println("Valor de cada credito:")
     val valorCredito = readLine()!!.toDouble()
 
-    val nombresCursos = arrayOfNulls<String>(cantidadCursos)
-    val creditosCursos = IntArray(cantidadCursos)
-    val costosCursos = DoubleArray(cantidadCursos)
+    val nombresCursos = mutableListOf<String>()
+    val creditosCursos = mutableListOf<Int>()
+    val costosCursos = mutableListOf<Double>()
 
-    for (i in 0 until cantidadCursos) {
-        println("Curso ${i + 1}:")
+    for (i in 1..cantidadCursos) {
+        println("Curso $i:")
         val nombreCurso = readLine()!!
 
         println("Creditos:")
         val creditos = readLine()!!.toInt()
 
-        nombresCursos[i] = nombreCurso
-        creditosCursos[i] = creditos
-        costosCursos[i] = creditos * valorCredito
+        nombresCursos.add(nombreCurso)
+        creditosCursos.add(creditos)
+        costosCursos.add(creditos * valorCredito)
     }
 
     var totalCreditos = 0
     var totalPagar = 0.0
 
-    for (i in 0 until cantidadCursos) {
+    for (i in creditosCursos.indices) {
         totalCreditos += creditosCursos[i]
         totalPagar += costosCursos[i]
     }
 
-    // ---------- VALIDACION: mas de 18 creditos requiere autorizacion ----------
     if (totalCreditos > 18) {
         println()
         println("Estudiante: $nombreEstudiante")
@@ -63,13 +62,12 @@ fun main() {
     }
     val valorCuota = totalPagar / numeroCuotas
 
-    // ---------- RESULTADO FINAL ----------
     println()
     println("Estudiante: $nombreEstudiante")
     println()
     println(String.format("%-30s %-10s %s", "Cursos:", "Creditos", "Costo"))
 
-    for (i in 0 until cantidadCursos) {
+    for (i in nombresCursos.indices) {
         println(
             String.format(
                 "%-30s %-10d S/%.0f",
@@ -79,7 +77,7 @@ fun main() {
     }
 
     println()
-    println("Cursos matriculados: $cantidadCursos")
+    println("Cursos matriculados: ${nombresCursos.size}")
     println("Total de creditos: $totalCreditos")
     println(String.format("Total a pagar: S/%.0f", totalPagar))
     println("Cargo academico: $cargaAcademica")
