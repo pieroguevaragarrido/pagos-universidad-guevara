@@ -20,6 +20,10 @@ fun main() {
             continue
         }
 
+        // ---------- MONTO INICIAL DE MATRICULA ----------
+        println("Monto inicial de matricula:")
+        val montoInicialMatricula = readLine()!!.toDouble()
+
         println("Nombre del estudiante:")
         val nombreEstudiante = readLine()!!
 
@@ -83,6 +87,9 @@ fun main() {
         val igv = totalPagar * 0.18
         val totalConIgv = totalPagar + igv
 
+        // Sumar el monto inicial de matrícula al monto de pago final
+        val totalFinal = totalConIgv + montoInicialMatricula
+
         var cargaAcademica = ""
         if (totalCreditos <= 12) {
             cargaAcademica = "M.R"
@@ -93,12 +100,12 @@ fun main() {
         }
 
         var numeroCuotas = 0
-        if (totalConIgv > 2500) {
+        if (totalFinal > 2500) {
             numeroCuotas = 3
         } else {
             numeroCuotas = 2
         }
-        val valorCuota = totalConIgv / numeroCuotas
+        val valorCuota = totalFinal / numeroCuotas
 
         println()
         println("Categoria: Ordinario")
@@ -119,9 +126,10 @@ fun main() {
         println("Cursos matriculados: ${nombresCursos.size}")
         println("Total de creditos: $totalCreditos")
         println("Turno: $turno (recargo ${(porcentajeTurno * 100).toInt()}%)")
-        println(String.format("Subtotal (con turno): S/%.0f", totalPagar))
+        println(String.format("Monto inicial de matricula: S/%.0f", montoInicialMatricula))
+        println(String.format("Subtotal cursos (con turno): S/%.0f", totalPagar))
         println(String.format("IGV (18%%): S/%.0f", igv))
-        println(String.format("Total a pagar (con IGV): S/%.0f", totalConIgv))
+        println(String.format("Total a pagar (final): S/%.0f", totalFinal))
         println("Cargo academico: $cargaAcademica")
         println(String.format("Forma de pago: %d cuotas de S/%.0f", numeroCuotas, valorCuota))
 
