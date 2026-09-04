@@ -1,6 +1,17 @@
 package com.guevara.pagouniversidad
 
 fun main() {
+    // ---------- CATEGORIA ----------
+    println("Elige tu categoria (ordinario, becado):")
+    val categoria = readLine()!!.lowercase()
+
+    if (categoria == "becado") {
+        println()
+        println("Categoria: Becado")
+        println("Total a pagar: S/0")
+        return
+    }
+
     println("Nombre del estudiante:")
     val nombreEstudiante = readLine()!!
 
@@ -45,13 +56,12 @@ fun main() {
         return
     }
 
-    // ---------- TURNO ----------
     println()
-    println("Elige tu turno (mañana, tarde, noche):")
+    println("Elige tu turno (manana, tarde, noche):")
     val turno = readLine()!!.lowercase()
 
     var porcentajeTurno = 0.0
-    if (turno == "mañana") {
+    if (turno == "manana") {
         porcentajeTurno = 0.10
     } else if (turno == "tarde") {
         porcentajeTurno = 0.15
@@ -80,6 +90,7 @@ fun main() {
     val valorCuota = totalPagar / numeroCuotas
 
     println()
+    println("Categoria: Ordinario")
     println("Estudiante: $nombreEstudiante")
     println()
     println(String.format("%-30s %-10s %s", "Cursos:", "Creditos", "Costo"))
