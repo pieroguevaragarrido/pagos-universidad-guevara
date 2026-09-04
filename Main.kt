@@ -1,48 +1,121 @@
 package com.guevara.pagouniversidad
 
-fun main() {
-    // ---------- AFORO DINAMICO ----------
-    println("Ingrese el aforo disponible en la institucion:")
-    var aforoDisponible = readLine()!!.toInt()
-
-    while (aforoDisponible > 0) {
+fun leerObligatorio(mensaje: String): String {
+    print(mensaje)
+    val valor = readLine()!!
+    if (valor.isBlank()) {
         println()
-        println("Aforo disponible: $aforoDisponible")
+        println("╔══════════════════════════════════════════════╗")
+        println("║  ERROR: No se permite dejar el campo vacio.  ║")
+        println("║  El programa se detendra.                    ║")
+        println("╚══════════════════════════════════════════════╝")
+        throw IllegalArgumentException("Entrada vacia no permitida")
+    }
+    return valor
+}
 
-        println("Elige tu categoria (ordinario, becado):")
-        val categoria = readLine()!!.lowercase()
+fun leerNumero(mensaje: String): Int {
+    val texto = leerObligatorio(mensaje)
+    return try {
+        texto.toInt()
+    } catch (e: NumberFormatException) {
+        println()
+        println("╔══════════════════════════════════════════════╗")
+        println("║  ERROR: Se esperaba un numero entero.        ║")
+        println("║  El programa se detendra.                    ║")
+        println("╚══════════════════════════════════════════════╝")
+        throw IllegalArgumentException("Entrada no numerica")
+    }
+}
+
+fun leerDecimal(mensaje: String): Double {
+    val texto = leerObligatorio(mensaje)
+    return try {
+        texto.toDouble()
+    } catch (e: NumberFormatException) {
+        println()
+        println("╔══════════════════════════════════════════════╗")
+        println("║  ERROR: Se esperaba un numero decimal.       ║")
+        println("║  El programa se detendra.                    ║")
+        println("╚══════════════════════════════════════════════╝")
+        throw IllegalArgumentException("Entrada no numerica")
+    }
+}
+
+fun leerCategoria(mensaje: String): String {
+    val valor = leerObligatorio(mensaje).lowercase()
+    if (valor != "ordinario" && valor != "becado") {
+        println()
+        println("╔══════════════════════════════════════════════╗")
+        println("║  ERROR: Categoria invalida.                  ║")
+        println("║  Opciones validas: ordinario, becado         ║")
+        println("║  El programa se detendra.                    ║")
+        println("══════════════════════════════════════════════╝")
+        throw IllegalArgumentException("Categoria invalida")
+    }
+    return valor
+}
+
+fun cajaTitulo(texto: String) {
+    val borde = "═".repeat(texto.length + 4)
+    println("╔$borde╗")
+    println("║  $texto  ║")
+    println("╚$borde╝")
+}
+
+fun cajaSeccion(texto: String) {
+    println()
+    println("┌${"─".repeat(texto.length + 2)}┐")
+    println("│ $texto │")
+    println("└${"─".repeat(texto.length + 2)}┘")
+}
+
+fun main() {
+    println()
+    cajaTitulo("SISTEMA DE MATRICULA UNIVERSITARIA")
+    println()
+
+    // ---------- AFORO DINAMICO ----------
+    cajaSeccion("CONFIGURACION INICIAL")
+    val aforoDisponible = leerNumero("Ingrese el aforo disponible en la institucion: ")
+    var aforoRestante = aforoDisponible
+
+    while (aforoRestante > 0) {
+        println()
+        println("╔══════════════════════════════════════════════╗")
+        println("║   AFORO DISPONIBLE: %-23d║".format(aforoRestante))
+        println("╚══════════════════════════════════════════════╝")
+
+        cajaSeccion("REGISTRO DE ESTUDIANTE")
+        val categoria = leerCategoria("Elige tu categoria (ordinario, becado): ")
 
         if (categoria == "becado") {
             println()
-            println("Categoria: Becado")
-            println("Total a pagar: S/0")
-            aforoDisponible--
+            println("┌──────────────────────────────────────────")
+            println("│  Categoria : Becado                      │")
+            println("│  Total     : S/0                         │")
+            println("└──────────────────────────────────────────┘")
+            aforoRestante--
             continue
         }
 
         // ---------- MONTO INICIAL DE MATRICULA ----------
-        println("Monto inicial de matricula:")
-        val montoInicialMatricula = readLine()!!.toDouble()
+        val montoInicialMatricula = leerDecimal("Monto inicial de matricula: ")
 
-        println("Nombre del estudiante:")
-        val nombreEstudiante = readLine()!!
-
-        println("Cantidad de cursos:")
-        val cantidadCursos = readLine()!!.toInt()
-
-        println("Valor de cada credito:")
-        val valorCredito = readLine()!!.toDouble()
+        val nombreEstudiante = leerObligatorio("Nombre del estudiante: ")
+        val cantidadCursos = leerNumero("Cantidad de cursos: ")
+        val valorCredito = leerDecimal("Valor de cada credito: ")
 
         val nombresCursos = mutableListOf<String>()
         val creditosCursos = mutableListOf<Int>()
         val costosCursos = mutableListOf<Double>()
 
+        cajaSeccion("DATOS DE LOS CURSOS")
         for (i in 1..cantidadCursos) {
-            println("Curso $i:")
-            val nombreCurso = readLine()!!
-
-            println("Creditos:")
-            val creditos = readLine()!!.toInt()
+            println()
+            println("  ► Curso $i")
+            val nombreCurso = leerObligatorio("    Nombre: ")
+            val creditos = leerNumero("    Creditos: ")
 
             nombresCursos.add(nombreCurso)
             creditosCursos.add(creditos)
@@ -59,18 +132,16 @@ fun main() {
 
         if (totalCreditos > 18) {
             println()
-            println("Estudiante: $nombreEstudiante")
-            println("Total de creditos: $totalCreditos")
-            println()
-            println("ATENCION: La matricula supera los 18 creditos.")
-            println("Se requiere autorizacion para continuar con el proceso de pago.")
-            println("El programa se detendra.")
+            println("╔══════════════════════════════════════════════════════════╗")
+            println("║  ATENCION: La matricula supera los 18 creditos.          ║")
+            println("║  Se requiere autorizacion para continuar.                ║")
+            println("║  El programa se detendra.                                ")
+            println("╚══════════════════════════════════════════════════════════╝")
             return
         }
 
-        println()
-        println("Elige tu turno (mañana, tarde, noche):")
-        val turno = readLine()!!.lowercase()
+        cajaSeccion("SELECCION DE TURNO")
+        val turno = leerObligatorio("Elige tu turno (mañana, tarde, noche): ").lowercase()
 
         var porcentajeTurno = 0.0
         if (turno == "mañana") {
@@ -86,8 +157,6 @@ fun main() {
 
         val igv = totalPagar * 0.18
         val totalConIgv = totalPagar + igv
-
-        // Sumar el monto inicial de matrícula al monto de pago final
         val totalFinal = totalConIgv + montoInicialMatricula
 
         var cargaAcademica = ""
@@ -107,39 +176,47 @@ fun main() {
         }
         val valorCuota = totalFinal / numeroCuotas
 
+        // ---------- REPORTE FINAL ----------
         println()
-        println("Categoria: Ordinario")
-        println("Estudiante: $nombreEstudiante")
-        println()
-        println(String.format("%-30s %-10s %s", "Cursos:", "Creditos", "Costo"))
+        println("╔══════════════════════════════════════════════════════════════╗")
+        println("║                    BOLETA DE MATRICULA                       ║")
+        println("╠══════════════════════════════════════════════════════════════╣")
+        println("║  Categoria : %-48s║".format("Ordinario"))
+        println("║  Estudiante: %-48s║".format(nombreEstudiante))
+        println("╠══════════════════════════════════════════════════════════════╣")
+        println("║  %-32s %-8s %10s║".format("CURSO", "CRED.", "COSTO"))
+        println("══════════════════════════════════════════════════════════════╣")
 
         for (i in nombresCursos.indices) {
-            println(
-                String.format(
-                    "%-30s %-10d S/%.0f",
-                    nombresCursos[i], creditosCursos[i], costosCursos[i]
-                )
-            )
+            println("║  %-32s %-8d S/%-8.0f║".format(
+                nombresCursos[i].take(32),
+                creditosCursos[i],
+                costosCursos[i]
+            ))
         }
 
-        println()
-        println("Cursos matriculados: ${nombresCursos.size}")
-        println("Total de creditos: $totalCreditos")
-        println("Turno: $turno (recargo ${(porcentajeTurno * 100).toInt()}%)")
-        println(String.format("Monto inicial de matricula: S/%.0f", montoInicialMatricula))
-        println(String.format("Subtotal cursos (con turno): S/%.0f", totalPagar))
-        println(String.format("IGV (18%%): S/%.0f", igv))
-        println(String.format("Total a pagar (final): S/%.0f", totalFinal))
-        println("Cargo academico: $cargaAcademica")
-        println(String.format("Forma de pago: %d cuotas de S/%.0f", numeroCuotas, valorCuota))
+        println("╠══════════════════════════════════════════════════════════════╣")
+        println("║  Cursos matriculados   : %-41d║".format(nombresCursos.size))
+        println("║  Total de creditos     : %-41d║".format(totalCreditos))
+        println("║  Turno                 : %-41s║".format("$turno (recargo ${(porcentajeTurno * 100).toInt()}%)"))
+        println("║  Precio inicial matric.: S/%-39.0f║".format(montoInicialMatricula))
+        println("║  Subtotal cursos       : S/%-39.0f║".format(totalPagar))
+        println("║  IGV (18%%)             : S/%-39.0f║".format(igv))
+        println("║  TOTAL A PAGAR         : S/%-39.0f║".format(totalFinal))
+        println("║  Cargo academico       : %-41s║".format(cargaAcademica))
+        println("║  Forma de pago         : %d cuotas de S/%-24.0f║".format(numeroCuotas, valorCuota))
+        println("╚══════════════════════════════════════════════════════════════╝")
 
-        aforoDisponible--
+        aforoRestante--
         println()
-        println("Aforo restante: $aforoDisponible")
+        println("  ✓ Registro completado. Aforo restante: $aforoRestante")
     }
 
-    if (aforoDisponible <= 0) {
+    if (aforoRestante <= 0) {
         println()
-        println("No se podrá inscribir más alumnos. El aforo está lleno.")
+        println("╔══════════════════════════════════════════════════════════════╗")
+        println("║  AVISO: El aforo esta lleno.                                 ║")
+        println("║  No se podrá inscribir más alumnos.                          ║")
+        println("╚══════════════════════════════════════════════════════════════╝")
     }
 }
